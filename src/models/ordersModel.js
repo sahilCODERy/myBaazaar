@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema({
     _id: String,
     order_name: String,
-    store_id: String
+    status: String,
+    store_id: String,
+    customer_id: String
 })
 export default mongoose.model("Orders", orderSchema);

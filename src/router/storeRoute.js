@@ -1,15 +1,11 @@
 import Router from "koa-router";
 import StoreServ from "../services/storeServ.js";
-
+import JWT from "../utils/jwt.js";
 const storeRouter = new Router();
 
-storeRouter.get('/getStores', async ctx => {
-    try {
-        let c = await StoreServ.getAllStores();
-        ctx.body = c
-    } catch (error) {
-        throw error        
-    }
+storeRouter.get('/getAllStores', JWT.authenticateJWT, JWT.authorize, async ctx => {
+    let c = await StoreServ.getAllStores();
+    ctx.body = c
 });
 
 storeRouter.post('/addStores', async ctx => {
@@ -17,5 +13,9 @@ storeRouter.post('/addStores', async ctx => {
     ctx.body = c
 });
 
+storeRouter.get('/getMyStore', JWT.authenticateJWT, async ctx => {
+    let c = await StoreServ.getMyStore(ctx.request.body);
+    ctx.body = c
+});
 
 export default storeRouter;

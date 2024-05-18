@@ -34,6 +34,14 @@ class StoreServ {
         console.log("🚀 ~ file: storeServ.js:33 ~ stores:", stores)
         let c = await Stores.insertMany(stores);
     }
+
+    async getMyStore(params) {
+    console.log("🚀 ~ file: storeServ.js:39 ~ params:", params)
+
+            let c = await Stores.findOne({store_name: params.username}) || {message:"Store Not Found"};
+            console.log("🚀 ~ file: storeServ.js:41 ~ c:", c)
+            return c;
+    }
 }
 
 export default new StoreServ();

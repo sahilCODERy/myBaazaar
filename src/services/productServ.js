@@ -16,16 +16,10 @@ class ProductServ {
         //     return JSON.parse(cacheData);
         // }
         // else{
-            try{
                 
-                let c = await Producs.find();
+                let c = await Products.find();
                 // this.myCache.set("mycourse",JSON.stringify(c));
                 return c;
-            }
-            catch(err){
-                throw err
-            }
-        // }
     }
 
     async addProducts(){

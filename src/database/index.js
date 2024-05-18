@@ -10,8 +10,7 @@ class Database{
     }
     async connect(){
         try {
-            // mongodb+srv://sahil:VzLSEAvfThmcbcxX@baazaardb.mdu2k4t.mongodb.net/?retryWrites=true&w=majority&appName=baazaarDB
-            let x = await mongoose.connect(`mongodb+srv://${this.config.DB_USER}:${this.config.DB_PASSWORD}@baazaardb.mdu2k4t.mongodb.net/${this.config.DB_NAME}?retryWrites=true&w=majority&appName=baazaarDB`);
+            let x = await mongoose.connect(this.config.DB_URL);
             if(x){
                 console.log("DB Connection Successful");
                 return true;

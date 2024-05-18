@@ -12,12 +12,15 @@ class App{
     connectDB(){
         let db = new Database();
     }
+    mountMiddlewares(){
+        this.app.use(bodyParser());
+        this.app.use(ErrorHandler.errorHandler);
+    }
     start(){
-        const app = new Koa();
-        app.use(bodyParser());
-        app.use(ErrorHandler);
-        new routeIndex(app);
-        app.listen(this.config.PORT, ()=>{console.log("Running at "+this.config.PORT)});
+        this.app = new Koa();
+        this.mountMiddlewares();
+        new routeIndex(this.app);
+        this.app.listen(this.config.PORT, ()=>{console.log("Running at "+this.config.PORT)});
     }
 }
 

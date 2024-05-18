@@ -14,4 +14,4 @@ storesRouter.post('/addStores', async ctx => {
 });
 
 
-export default new storesRouter;
+export default storesRouter;
