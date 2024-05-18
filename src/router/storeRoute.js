@@ -8,7 +8,6 @@ storeRouter.get('/getStores', async ctx => {
         let c = await StoreServ.getAllStores();
         ctx.body = c
     } catch (error) {
-        console.log("🚀 ~ file: storeRoute.js:11 ~ error:", error)
         throw error        
     }
 });
