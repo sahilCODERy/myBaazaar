@@ -16,12 +16,12 @@ customerRouter.post('/signup', async ctx => {
 
 
 
-customerRouter.get('/getMyInfo', JWT.authenticateJWT, async ctx => {
+customerRouter.get('/getMyInfo', JWT.authenticateJWT, JWT.authorizeForCustomer, async ctx => {
     let c = await CustomerServ.getMyInfo(ctx.request.body);
     ctx.body = c
 });
 
-customerRouter.post('/updateMyInfo', JWT.authenticateJWT, async ctx => {
+customerRouter.post('/updateMyInfo', JWT.authenticateJWT, JWT.authorizeForCustomer, async ctx => {
     let c = await CustomerServ.updateMyInfo(ctx.request.body);
     ctx.body = c
 });

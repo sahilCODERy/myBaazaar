@@ -5,13 +5,13 @@ const productRouter = new Router();
 
 productRouter.get('/getProducts', async (ctx, next) => {
         let c = await productServ.getAllProducts();
-        ctx.body = c
+        ctx.body = c;
     
 });
 
 productRouter.post('/addProducts', async (ctx, next) => {
-        let c = await productServ.addProducts();
-        ctx.body = c
+        let c = await productServ.addProducts(ctx.request.body);
+        ctx.body = c;
     
 });
 

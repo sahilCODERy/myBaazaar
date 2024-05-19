@@ -24,7 +24,7 @@ storeRouter.post('/addStores', async ctx => {
     ctx.body = c
 });
 
-storeRouter.get('/getMyStore', JWT.authenticateJWT, async ctx => {
+storeRouter.get('/getMyStore', JWT.authenticateJWT, JWT.authorizeForOwner, async ctx => {
     let c = await StoreServ.getMyStore(ctx.request.body);
     ctx.body = c
 });
