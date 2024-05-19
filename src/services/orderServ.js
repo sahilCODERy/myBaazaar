@@ -1,38 +1,19 @@
-import Stores from '../models/storesModel';
-import { faker } from '@faker-js/faker';
-// import NodeCache from 'node-cache';
+import Orders from '../models/ordersModel.js';
 
-class StoresServ {
+class OrderServ {
     myCache;
     constructor() {
-        // this.myCache = new NodeCache();
-        // console.log("🚀 ~ file: coursesServ.ts:10 ~ this.myCache:", this.myCache)
+        this.config = process.env;
     }
 
-    async getAllStores() {
-
-        // if(this.myCache.has("mycourse")){
-        //     let cacheData = this.myCache.get("mycourse") as string;
-        //     return JSON.parse(cacheData);
-        // }
-        // else{
-            let c = await Stores.find();
-            // this.myCache.set("mycourse",JSON.stringify(c));
+    async getAllOrders() {
+            let c = await Orders.find();
             return c;
-        // }
     }
 
-    async addStores(){
-        let stores = [];
-        for(let i=0;i<=5;i++){
-            let store = {}
-            store.id = i.toString();
-            store.title = faker.person.jobTitle();
-            store.type = faker.animal.type();
-            stores.push(store);
-        }
-        let c = await Stores.insertMany(stores);
+    async placeNewOrder(){
+        
     }
 }
 
-export default new StoresServ();
+export default new OrderServ();

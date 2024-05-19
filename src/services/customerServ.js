@@ -1,38 +1,59 @@
-import Stores from '../models/storesModel';
-import { faker } from '@faker-js/faker';
-// import NodeCache from 'node-cache';
+import Customers from '../models/customerModel.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-class StoresServ {
-    myCache;
+class CustomerServ {
     constructor() {
-        // this.myCache = new NodeCache();
-        // console.log("🚀 ~ file: coursesServ.ts:10 ~ this.myCache:", this.myCache)
+        this.config = process.env;
     }
 
-    async getAllStores() {
+    async login(params) {
+        const user = await Customers.findOne({ username: params.username });
+        if (!user) return { message: "User not found" };
 
-        // if(this.myCache.has("mycourse")){
-        //     let cacheData = this.myCache.get("mycourse") as string;
-        //     return JSON.parse(cacheData);
-        // }
-        // else{
-            let c = await Stores.find();
-            // this.myCache.set("mycourse",JSON.stringify(c));
+        const valid = bcrypt.compareSync(params.password, user.password);
+        if (!valid) return { message: "Wrong password" };
+
+        const token = jwt.sign({ username: params.username, role: user.role }, this.config.SECRET_KEY, { expiresIn: '30m' }, { algorithm: "HS256" });
+        console.log("🚀 ~ file: authServ.js:18 ~ token:", token)
+        return { message: "Login Successful", token };
+
+    }
+
+    async signup(params) {
+        const user = await Customers.findOne({ username: params.username });
+        if (user) return { message: 'User already exists' };
+        params._id = params.username;
+
+        const salt = bcrypt.genSaltSync(10);
+        const password = bcrypt.hashSync(params.password, salt);
+
+        params.password = password;
+        let c = await Customers.create(params);
+        return { message: "Customer Created Successfully" };
+
+    }
+    async getMyInfo(params) {
+            const c = await Customers.findOne({username: params.username}).lean() || {message: "Customer Not Found"};
+            delete c.username;
+            delete c.password;
             return c;
-        // }
     }
 
-    async addStores(){
-        let stores = [];
-        for(let i=0;i<=5;i++){
-            let store = {}
-            store.id = i.toString();
-            store.title = faker.person.jobTitle();
-            store.type = faker.animal.type();
-            stores.push(store);
+    async getOrders(){
+
+    }
+
+    async updateMyInfo(params){
+        const c = await Customers.findOne({username: params.username}).lean() || {message: "Customer Not Found"};
+        for(let key in params){
+            if(key!=="username" || key!=="role"){
+                c[key] = params[key]
+            }
         }
-        let c = await Stores.insertMany(stores);
+        await Customers.updateOne({username: params.username},c)
+        return c;
     }
 }
 
-export default new StoresServ();
+export default new CustomerServ();

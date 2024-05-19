@@ -1,17 +1,17 @@
 import Router from "koa-router";
-import StoresServ from "../services/storeServ";
+import OrderServ from "../services/orderServ.js";
 
-const storesRouter = new Router();
+const OrderRoute = new Router();
 
-storesRouter.get('/getStores', async ctx => {
-    let c = await StoresServ.getAllStores();
+OrderRoute.get('/getOrders', async ctx => {
+    let c = await OrderServ.getAllStores();
     ctx.body = c
 });
 
-storesRouter.post('/addStores', async ctx => {
-    let c = await StoresServ.addStores();
+OrderRoute.post('/placeNewOrder', async ctx => {
+    let c = await OrderServ.addStores();
     ctx.body = c
 });
 
 
-export default new storesRouter;
+export default OrderRoute;

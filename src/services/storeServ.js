@@ -1,30 +1,47 @@
 import Stores from '../models/storesModel.js';
-import { faker } from '@faker-js/faker';
-// import NodeCache from 'node-cache';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 class StoreServ {
-    myCache;
     constructor() {
-        // this.myCache = new NodeCache();
-        // console.log("🚀 ~ file: coursesServ.ts:10 ~ this.myCache:", this.myCache)
+        this.config = process.env;
+    }
+
+    async login(params) {
+        const user = await Stores.findOne({ username: params.username });
+        if (!user) return { message: "User not found" };
+
+        const valid = bcrypt.compareSync(params.password, user.password);
+        if (!valid) return { message: "Wrong password" };
+
+        const token = jwt.sign({ username: params.username, role: user.role }, this.config.SECRET_KEY, { expiresIn: '30m' }, { algorithm: "HS256" });
+        console.log("🚀 ~ file: authServ.js:18 ~ token:", token)
+        return { message: "Login Successful", token };
+
+    }
+
+    async signup(params) {
+        const user = await Stores.findOne({ username: params.username });
+        if (user) return { message: 'User already exists' };
+        params._id = params.username;
+
+        const salt = bcrypt.genSaltSync(10);
+        const password = bcrypt.hashSync(params.password, salt);
+
+        params.password = password;
+        let c = await Stores.create(params);
+        return { message: "Store Created Successfully" };
+
     }
 
     async getAllStores() {
-
-        // if(this.myCache.has("mycourse")){
-        //     let cacheData = this.myCache.get("mycourse") as string;
-        //     return JSON.parse(cacheData);
-        // }
-        // else{
-            let c = await Stores.find();
-            // this.myCache.set("mycourse",JSON.stringify(c));
-            return c;
-        // }
+        let c = await Stores.find();
+        return c;
     }
 
-    async addStores(){
+    async addStores() {
         let stores = [];
-        for(let i=0;i<=5;i++){
+        for (let i = 0; i <= 5; i++) {
             let store = {}
             store._id = i.toString();
             store.store_name = faker.company.name();
@@ -36,11 +53,12 @@ class StoreServ {
     }
 
     async getMyStore(params) {
-    console.log("🚀 ~ file: storeServ.js:39 ~ params:", params)
 
-            let c = await Stores.findOne({store_name: params.username}) || {message:"Store Not Found"};
-            console.log("🚀 ~ file: storeServ.js:41 ~ c:", c)
-            return c;
+        const store = await Stores.findOne({ username: params.username }).lean() || { message: "Store Not Found" };
+        const storeRes = { ...store };
+        delete storeRes.username
+        delete storeRes.password
+        return storeRes;
     }
 }
 
