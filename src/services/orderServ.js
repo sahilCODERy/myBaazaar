@@ -1,7 +1,6 @@
 import Orders from '../models/ordersModel.js';
 
 class OrderServ {
-    myCache;
     constructor() {
         this.config = process.env;
     }
@@ -20,7 +19,6 @@ class OrderServ {
     }
 
     async placeNewOrder(params) {
-        console.log("🚀 ~ file: orderServ.js:24 ~ params.role:", params.role)
         if(params.role == "customer"){
             const user = await Orders.findOne({ _id: params.order_id });
             if (user) return { message: 'Order already exists' };

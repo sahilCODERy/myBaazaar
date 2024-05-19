@@ -1,7 +1,6 @@
 import Products from '../models/productsModel.js';
 
 class ProductServ {
-    myCache;
     constructor() {
     }
 

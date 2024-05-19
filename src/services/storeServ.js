@@ -39,19 +39,6 @@ class StoreServ {
         return c;
     }
 
-    async addStores() {
-        let stores = [];
-        for (let i = 0; i <= 5; i++) {
-            let store = {}
-            store._id = i.toString();
-            store.store_name = faker.company.name();
-            store.address = faker.location.street();
-            stores.push(store);
-        }
-        console.log("🚀 ~ file: storeServ.js:33 ~ stores:", stores)
-        let c = await Stores.insertMany(stores);
-    }
-
     async getMyStore(params) {
 
         const store = await Stores.findOne({ username: params.username }).lean() || { message: "Store Not Found" };
